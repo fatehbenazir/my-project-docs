@@ -1,0 +1,6 @@
+site_name: My Project Documentation
+nav:
+    - Home: index.md
+    - Getting Started: getting-started.md # Create this file in docs/
+theme: readthedocs # Or try 'material'
+
