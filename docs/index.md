@@ -10,7 +10,7 @@ Here's how to get started:
 2.  Configure it.
 3.  Run it.
 4. Test the actions workflow and make sure that everything works fine. 
-
+5. Added env variables. now test out actions workflow
 [TOC]
 
 
