@@ -16,16 +16,40 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.9"  # Or any version you want
+          python-version: "3.9"
 
-      - name: Install dependencies
+      - name: Install PyGithub
         run: |
           python -m pip install --upgrade pip
-          python -m pip install PyGithub  # For interacting with GitHub API
-          # Install any other dependencies, including google-ai-gemini if available
+          python -m pip install PyGithub
 
-      - name: Run Gemini evaluation
+      - name: List changed files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # Store your Gemini API key as a secret
-        run: python .github/scripts/evaluate_docs.py  # Path to your script
+        run: |
+          python <<EOF
+          import os
+          from github import Github
+
+          def main():
+              github_token = os.environ.get("GITHUB_TOKEN")
+              repository_name = os.environ.get("GITHUB_REPOSITORY")
+              pr_number = int(os.environ.get("GITHUB_PULL_REQUEST_NUMBER"))
+
+              if not all([github_token, repository_name, pr_number]):
+                  print("Missing required environment variables.")
+                  return
+
+              g = Github(github_token)
+              repo = g.get_repo(repository_name)
+              pr = repo.get_pull(pr_number)
+              changed_files = pr.get_files()
+
+              print(f"Changed files in PR #{pr_number}:")
+              for file in changed_files:
+                  print(file.filename)
+
+          if __name__ == "__main__":
+              main()
+              EOF
+              
