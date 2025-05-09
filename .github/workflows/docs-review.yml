@@ -3,7 +3,7 @@ name: Documentation Review
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   review:
@@ -26,10 +26,10 @@ jobs:
       - name: List changed files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}  # Correct way to get PR number
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.number }}  # Correct way to get PR number
         run: |
-          python <<EOF
+          python3 <<EOF
           import os
           from github import Github
 
@@ -53,5 +53,4 @@ jobs:
 
           if __name__ == "__main__":
               main()
-              EOF
-              
+          EOF
